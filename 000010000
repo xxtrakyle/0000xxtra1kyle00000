@@ -1,0 +1,17 @@
+You can use the ps command along with grep and awk to achieve this. Here's how:
+
+ps -eo pid,etime,cmd | grep -v '00:00:00' | awk '{elapsed_hours = int($2/3600); if (elapsed_hours > 1) {print $0}}'
+Explanation:
+
+ps -eo pid,etime,cmd: This part uses ps to list processes with specific information.
+-e: Show processes from all users.
+o: Specify the output format.
+pid: Process ID.
+etime: Elapsed time since the process started (in HH:MM:SS format).
+cmd: Command name including arguments.
+grep -v '00:00:00': This part filters out processes with an elapsed time of exactly zero hours (processes that just started).
+awk '{elapsed_hours = int($2/3600); if (elapsed_hours > 1) {print $0}}': This part uses awk to further process the output:
+$2: This refers to the second column, which is the elapsed time.
+int($2/3600): This calculates the elapsed time in hours by dividing the total seconds by 3600.
+if (elapsed_hours > 1): This checks if the elapsed hours are greater than 1.
+print $0: If the condition is met, the entire line (process information) is printed.
